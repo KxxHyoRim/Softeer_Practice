@@ -22,7 +22,7 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         cin >> m >> p;  //무게, 가격
-        pq.push(Treasure(m, p));
+        pq.emplace(m, p);
     }
 
     while (w != 0) {
