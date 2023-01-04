@@ -8,45 +8,40 @@ int main() {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    int time[101] = {0,};
-    int k, n, tmp, result = 0;
+    int dp[101][101] = {0};
+    int k, n, tmp, move_time = 0;
 
     cin >> k >> n;
 
     for (int i = 0; i < n; i++) {
-        int min = INT_MAX;
-        int minIdx = -1;
-        // L ij 시간
+
         for (int j = 0; j < k; j++) {
             cin >> tmp;
-            time[j] += tmp;
-            if (time[j] < min) {
-                min = time[j];
-                minIdx = j;
-            }
+            dp[j][i] += tmp;  // 세로 한줄한줄씩 채워나감
         }
-
-        result += min;
 
         if (i == n - 1) break;
 
-        for (int j = 0; j < k; j++) {
-            cout << j << "생산장\n";
-            if (j == minIdx)
-                for (int l = 0; l < k; l++){
-                    if (l == j){
-                        time[l] = 0;
-                        continue;
-                    }
-                    cin >> time[l];
-                }
-            else
-                for (int l = 0; l < k - 1; l++)
-                    cin >> tmp; // 필요 없는 값
-
+        for (int j = 0 ; j < k; j++){   // to
+            for (int l = 0 ; l < k; l++){   // from
+                if (j == l) move_time = 0;
+                else cin >> move_time;
+                if (dp[j][i+1] == 0)
+                    dp[j][i+1] = dp[l][i] + move_time;
+                else
+                    dp[j][i+1] = min(dp[j][i+1], dp[l][i] + move_time);
+            }
         }
     }
 
-    cout << result;
+
+    int min = dp[0][k - 1];
+
+    for (int i = 1; i < k; i++) {
+        if (dp[i][n - 1] < min)
+            min = dp[i][n - 1];
+    }
+
+    cout << min;
     return 0;
 }
